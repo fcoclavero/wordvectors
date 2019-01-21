@@ -1,6 +1,11 @@
+from numpy import np
+
 from unittest import TestCase
 
 from ..settings import ES
+
+from ..src.common import KeyedVectorSingleton, VectorFactory
+from ..src.utilities import random_insert, distance_cosine
 
 
 class KeyedVectorSingletonTestCase(TestCase):
@@ -143,19 +148,19 @@ class VectorFactoryTestCase(TestCase):
         # If the partial vector is zero, the word's vector should be returned
         np.testing.assert_array_equal(
             self.word_vector,
-            self.vector_factory._word_vector_sum(self.zero_vector, self.word)
+            self.vector_factory._word_vector_partial_sum(self.zero_vector, self.word)
         )
 
         # If a non-existent word is added, the result should be the partial vector
         np.testing.assert_array_equal(
             self.zero_vector,
-            self.vector_factory._word_vector_sum(self.zero_vector, "plbra")
+            self.vector_factory._word_vector_partial_sum(self.zero_vector, "plbra")
         )
 
         # Simple sum
         np.testing.assert_array_equal(
             self.word_vector + self.word_vector,
-            self.vector_factory._word_vector_sum(self.word_vector, self.word)
+            self.vector_factory._word_vector_partial_sum(self.word_vector, self.word)
         )
 
     def test_vector_from_word(self):
@@ -165,7 +170,7 @@ class VectorFactoryTestCase(TestCase):
         """
         np.testing.assert_array_equal(
             self.word_vector,
-            self.vector_factory.vector(self.word)
+            self.vector_factory.word_vector(self.word)
         )
 
     def _document_vector(self, similar_1, similar_2, different):
@@ -193,9 +198,9 @@ class VectorFactoryTestCase(TestCase):
         self.assertGreaterEqual(distance_3, distance_1)
 
         # Vectorize the sentences
-        similar_vector_1 = self.vector_factory.vector(similar_1)
-        similar_vector_2 = self.vector_factory.vector(similar_2)
-        different_vector = self.vector_factory.vector(different)
+        similar_vector_1 = self.vector_factory.word_vector(similar_1)
+        similar_vector_2 = self.vector_factory.word_vector(similar_2)
+        different_vector = self.vector_factory.word_vector(different)
 
         # Now we check if the generated vectors maintain the relation above
         distance_1 = distance_cosine(similar_vector_1, similar_vector_2)
