@@ -1,4 +1,4 @@
-from common import VectorFactory
+from .common import VectorFactory
 
 from ..settings import ES
 

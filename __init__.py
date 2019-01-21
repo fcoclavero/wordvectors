@@ -1,2 +1,2 @@
-from src import en
-from src import es
+from .src import en
+from .src import es
