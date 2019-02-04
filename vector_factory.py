@@ -43,7 +43,7 @@ class KeyedVectorSingleton:
         Gensim does not provide a method the get the vector shape, so we must manually get it using a word in the corpus.
         :return: the vector dimensions
         """
-        corpus_word = self.keyed_vectors.index2entity[0] # get the first corpus word (any)
+        corpus_word = self.keyed_vectors.index2word[0] # get the first corpus word (any). NOTE: This function used to be index2entity
         corpus_word_vector = self.keyed_vectors[corpus_word]  # get its wordvector
         return corpus_word_vector.shape # return its shape
 
