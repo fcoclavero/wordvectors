@@ -1,8 +1,8 @@
 EN = {
-    'VECTOR_PATH': 'word_vector/vec/wiki.en.vec',
+    'VECTOR_PATH': r'C:\Users\Chopan\Documents\Data\FastText_SBWC.vec',
     'VECTOR_LIMIT': None
 }
 ES = {
-    'VECTOR_PATH': 'word_vector/vec/wiki.en.vec',
+    'VECTOR_PATH': r'C:\Users\Chopan\Documents\Data\FastText_SBWC.vec',
     'VECTOR_LIMIT': None
 }
