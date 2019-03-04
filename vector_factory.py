@@ -7,27 +7,15 @@ from functools import reduce
 from gensim.models.keyedvectors import KeyedVectors
 
 
-class KeyedVectorSingleton:
+class VectorFactory:
     """
-    Utility class to manage single KeyedVector instances, as they are heavy to load.
+    Factory class for creating word embedding vectors from any string.
     """
-    __instance = None
-
-    @staticmethod
-    def getInstance(vector_path, vector_limit):
-        """
-        Static access method for singleton pattern.
-        :return: the single KeyedVectorSingleton instance
-        :type: KeyedVectorSingleton
-        """
-        if KeyedVectorSingleton.__instance is None: # if not created
-            KeyedVectorSingleton.__instance = KeyedVectorSingleton(vector_path, vector_limit) # set the instance
-        return KeyedVectorSingleton.__instance
-
     def __init__(self, vector_path, vector_limit):
         """
-        Initialize constant parameters for all instances. Loads a gensim KeyedVectors object.
-        :return: None
+        Loads a gensim KeyedVectors object.
+        :return: a new VectorFactory
+        :type: VectorFactory
         """
         try:
             # loading a pickle is faster
@@ -56,13 +44,6 @@ class KeyedVectorSingleton:
         """
         return np.zeros(shape=self.vector_dimensions)
 
-    def vector(self, word):
-        """
-        Get a word's embedding
-        :param word: string with a single word.
-        """
-        return self.keyed_vectors[word]
-
     def doesnt_match(self, words):
         """
         Adapter method to simplify interface.
@@ -81,35 +62,6 @@ class KeyedVectorSingleton:
         """
         return self.keyed_vectors.wmdistance(term_1, term_2)
 
-
-class VectorFactory:
-    """
-    Factory class for creating word embedding vectors from any string.
-    """
-    def __init__(self, vector_path, vector_limit):
-        """
-        Creates a new word embedding vector factory.
-        :return: a new VectorFactory
-        :type: VectorFactory
-        """
-        self.keyed_vectors = KeyedVectorSingleton.getInstance(vector_path, vector_limit)
-
-    @property
-    def vector_dimensions(self):
-        """
-        Get the vector dimensions from the KeyedVectorSingleton object.
-        :return: the vector dimensions
-        """
-        return self.keyed_vectors.vector_dimensions
-
-    @property
-    def zero_vector(self):
-        """
-        Get the zero vector from the KeyedVectorSingleton object.
-        :return: the zero vector
-        :type: np.ndarray
-        """
-        return self.keyed_vectors.zero_vector
 
     def _word_vector_partial_sum(self, partial_vector, word):
         """
@@ -138,7 +90,7 @@ class VectorFactory:
         :return: the sentence's word vector
         :type: np.ndarray
         """
-        return self.keyed_vectors.vector(word)
+        return self.keyed_vectors[word]
 
     def document_vector(self, document):
         """

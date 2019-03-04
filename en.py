@@ -3,7 +3,30 @@ from .vector_factory import VectorFactory
 from .settings import EN
 
 
-vector_factory = VectorFactory(EN['VECTOR_PATH'], EN['VECTOR_LIMIT'])
+class VectorFactoryEnglish(VectorFactory):
+    """
+    Utility class to manage a single VectorFactory instance for this language, as they are heavy to load.
+    """
+    __instance = None
+
+    @staticmethod
+    def getInstance(vector_path, vector_limit):
+        """
+        Static access method for singleton pattern.
+        :return: the single KeyedVectorSingleton instance
+        :type: KeyedVectorSingleton
+        """
+        if VectorFactoryEnglish.__instance is None: # if not created
+            VectorFactoryEnglish.__instance = VectorFactoryEnglish(vector_path, vector_limit) # set the instance
+        return VectorFactoryEnglish.__instance
+
+    def __init__(self, vector_path, vector_limit):
+        super(VectorFactoryEnglish, self).__init__(vector_path, vector_limit)
+
+
+
+vector_factory = VectorFactoryEnglish.getInstance(EN['VECTOR_PATH'], EN['VECTOR_LIMIT'])
+
 
 
 def word_vector(word):
