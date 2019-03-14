@@ -50,3 +50,12 @@ def document_vector(document):
     :type: np.ndarray
     """
     return vector_factory.document_vector(document)
+
+
+def zero_vector():
+    """
+    theReturns a zero vector with the same shapes as word and document vectors.
+    :return: the zero vector
+    :type: np.ndarray
+    """
+    return vector_factory.zero_vector
