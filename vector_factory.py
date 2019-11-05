@@ -1,9 +1,13 @@
+__author__ = ['Francisco Clavero']
+__email__ = ['fcoclavero32@gmail.com']
+__status__ = 'Prototype'
+
+
 import pickle
 
 import numpy as np
 
 from functools import reduce
-
 from gensim.models.keyedvectors import KeyedVectors
 
 
@@ -11,6 +15,7 @@ class VectorFactory:
     """
     Factory class for creating word embedding vectors from any string.
     """
+
     def __init__(self, vector_path, vector_limit):
         """
         Loads a gensim KeyedVectors object.
@@ -61,7 +66,6 @@ class VectorFactory:
         Adapter method to simplify interface.
         """
         return self.keyed_vectors.wmdistance(term_1, term_2)
-
 
     def _word_vector_partial_sum(self, partial_vector, word):
         """

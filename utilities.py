@@ -1,9 +1,13 @@
+__author__ = ['Francisco Clavero']
+__email__ = ['fcoclavero32@gmail.com']
+__status__ = 'Prototype'
+
+
 import sys
 
 import numpy as np
 
 from random import randrange
-
 from scipy.spatial.distance import cosine
 
 

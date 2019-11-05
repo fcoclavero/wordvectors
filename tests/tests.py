@@ -1,33 +1,40 @@
-from numpy import np
+__author__ = ['Francisco Clavero']
+__email__ = ['fcoclavero32@gmail.com']
+__status__ = 'Prototype'
+
+
+import numpy as np
 
 from unittest import TestCase
 
+from ..es import VectorFactorySpanish
 from ..settings import ES
-
-from ..src.common import KeyedVectorSingleton, VectorFactory
-from ..src.utilities import random_insert, distance_cosine
+from ..utilities import random_insert, distance_cosine
 
 
-class KeyedVectorSingletonTestCase(TestCase):
+class VectorFactoryTestCase(TestCase):
     """
-    Tests pre-computed vectors (gensim) and their properties.
+    Tests for creating vectors from strings and vector space properties.
     """
 
     @classmethod
     def setUpClass(cls):
         """
         Runs before tests: https://docs.python.org/3.6/library/unittest.html
-        Loads word vectors for testing.
+        Loads word vectors and creates a new vector factory
         :return: None
         """
-        cls.keyed_vectors = KeyedVectorSingleton.getInstance(ES['VECTOR_PATH'], ES['VECTOR_LIMIT'])
+        cls.keyed_vectors = VectorFactorySpanish.getInstance(ES['VECTOR_PATH'], ES['VECTOR_LIMIT'])
+        cls.word = 'palabra'
+        cls.word_vector = cls.keyed_vectors.word_vector(cls.word)
+        cls.zero_vector = cls.keyed_vectors.zero_vector
 
     def test_singleton(self):
         """
         Test that only one instance is created.
         :return: None
         """
-        new_keyed_vectors = KeyedVectorSingleton.getInstance(ES['VECTOR_PATH'], ES['VECTOR_LIMIT'])
+        new_keyed_vectors = VectorFactorySpanish.getInstance(ES['VECTOR_PATH'], ES['VECTOR_LIMIT'])
         self.assertEqual(self.keyed_vectors, new_keyed_vectors)
 
     def test_dimensions(self):
@@ -50,10 +57,7 @@ class KeyedVectorSingletonTestCase(TestCase):
         :type: str
         :return: None
         """
-        similar = self.keyed_vectors.most_similar_cosmul(  # returns (str, distance) pairs
-            positive=positive,
-            negative=negative
-        )
+        similar = self.keyed_vectors.most_similar_cosmul(positive=positive, negative=negative) # (str, distance) pairs
         similar_strings = [s[0] for s in similar]  # get only strings
         self.assertTrue(required in similar_strings)
 
@@ -63,26 +67,11 @@ class KeyedVectorSingletonTestCase(TestCase):
         the vector space; one that reflects the semantic meaning of the words.
         :return: None
         """
-        self._word_vectors_similarity(
-            positive=['rey', 'mujer'],
-            negative=['hombre'],
-            required="reina"
+        self._word_vectors_similarity(positive=['rey', 'mujer'], negative=['hombre'], required='reina')
+        self._word_vectors_similarity(positive=['jugar', 'canta'], negative=['cantar'], required='juega'
         )
-        self._word_vectors_similarity(
-            positive=['jugar', 'canta'],
-            negative=['cantar'],
-            required="juega"
-        )
-        self._word_vectors_similarity(
-            positive=['pinochet', 'argentino'],
-            negative=['chileno'],
-            required="perón"
-        )
-        self._word_vectors_similarity(
-            positive=['santiago', 'venezuela'],
-            negative=['chile'],
-            required="caracas"
-        )
+        self._word_vectors_similarity(positive=['pinochet', 'argentino'], negative=['chileno'], required='perón')
+        self._word_vectors_similarity(positive=['santiago', 'venezuela'], negative=['chile'], required='caracas')
 
     def _word_vectors_match(self, similar, different):
         """
@@ -105,40 +94,8 @@ class KeyedVectorSingletonTestCase(TestCase):
         the vector space; one that reflects the semantic meaning of the words.
         :return: None
         """
-        self._word_vectors_match(
-            similar=["blanco", "azul", "rojo"],
-            different="chile"
-        )
-        self._word_vectors_match(
-            similar=["lunes", "martes", "miercoles"],
-            different="septiembre"
-        )
-
-
-class VectorFactoryTestCase(TestCase):
-    """
-    Tests for creating vectors from strings and vector space properties.
-    """
-
-    @classmethod
-    def setUpClass(cls):
-        """
-        Runs before tests: https://docs.python.org/3.6/library/unittest.html
-        Loads word vectors and creates a new vector factory
-        :return: None
-        """
-        cls.keyed_vectors = KeyedVectorSingleton.getInstance(ES['VECTOR_PATH'], ES['VECTOR_LIMIT'])
-        cls.vector_factory = VectorFactory(ES['VECTOR_PATH'], ES['VECTOR_LIMIT'])
-        cls.word = "palabra"
-        cls.word_vector = cls.keyed_vectors.vector(cls.word)
-        cls.zero_vector = cls.vector_factory.zero_vector
-
-    def test_dimensions(self):
-        """
-        Test that the loaded vectors have the correct dimensions.
-        :return: None
-        """
-        self.assertEqual(self.vector_factory.vector_dimensions, (300,))
+        self._word_vectors_match(similar=['blanco', 'azul', 'rojo'], different='chile')
+        self._word_vectors_match(similar=['lunes', 'martes', 'miercoles'], different='septiembre')
 
     def test_word_vector_sum(self):
         """
@@ -147,20 +104,16 @@ class VectorFactoryTestCase(TestCase):
         """
         # If the partial vector is zero, the word's vector should be returned
         np.testing.assert_array_equal(
-            self.word_vector,
-            self.vector_factory._word_vector_partial_sum(self.zero_vector, self.word)
-        )
+            self.word_vector, self.keyed_vectors._word_vector_partial_sum(self.zero_vector, self.word))
 
         # If a non-existent word is added, the result should be the partial vector
         np.testing.assert_array_equal(
-            self.zero_vector,
-            self.vector_factory._word_vector_partial_sum(self.zero_vector, "plbra")
-        )
+            self.zero_vector, self.keyed_vectors._word_vector_partial_sum(self.zero_vector, 'plbra'))
 
         # Simple sum
         np.testing.assert_array_equal(
             self.word_vector + self.word_vector,
-            self.vector_factory._word_vector_partial_sum(self.word_vector, self.word)
+            self.keyed_vectors._word_vector_partial_sum(self.word_vector, self.word)
         )
 
     def test_vector_from_word(self):
@@ -168,10 +121,7 @@ class VectorFactoryTestCase(TestCase):
         Simplest test. Check if the vector created for a word is the same vector.
         :return: None
         """
-        np.testing.assert_array_equal(
-            self.word_vector,
-            self.vector_factory.word_vector(self.word)
-        )
+        np.testing.assert_array_equal(self.word_vector, self.keyed_vectors.word_vector(self.word))
 
     def _document_vector(self, similar_1, similar_2, different):
         """
@@ -198,9 +148,9 @@ class VectorFactoryTestCase(TestCase):
         self.assertGreaterEqual(distance_3, distance_1)
 
         # Vectorize the sentences
-        similar_vector_1 = self.vector_factory.word_vector(similar_1)
-        similar_vector_2 = self.vector_factory.word_vector(similar_2)
-        different_vector = self.vector_factory.word_vector(different)
+        similar_vector_1 = self.keyed_vectors.document_vector(similar_1)
+        similar_vector_2 = self.keyed_vectors.document_vector(similar_2)
+        different_vector = self.keyed_vectors.document_vector(different)
 
         # Now we check if the generated vectors maintain the relation above
         distance_1 = distance_cosine(similar_vector_1, similar_vector_2)
@@ -218,17 +168,17 @@ class VectorFactoryTestCase(TestCase):
         :return: None
         """
         self._document_vector(
-            similar_1="trayectoria",  # net_cod = [5]
-            similar_2="historial trayectoria",  # net_cod = [5]
-            different="atencion"  # net_cod = [1]
+            similar_1='trayectoria',  # net_cod = [5]
+            similar_2='historial trayectoria',  # net_cod = [5]
+            different='atencion'  # net_cod = [1]
         )
         self._document_vector(
-            similar_1="costo corriente alto costo gasto mensual",  # net_cod = [61]
-            similar_2="costo mantencion costo alto mantencion",  # net_cod = [61]
-            different="precio variedad servicio"  # net_cod = [8,2]
+            similar_1='costo corriente alto costo gasto mensual',  # net_cod = [61]
+            similar_2='costo mantencion costo alto mantencion',  # net_cod = [61]
+            different='precio variedad servicio'  # net_cod = [8,2]
         )
         self._document_vector(
-            similar_1="sucursales respuesta fluidez bancaria",  # net_cod = [12,5,7]
-            similar_2="respuesta rapida",  # net_cod = [7]
-            different="menores costos"  # net_cod = [57]
+            similar_1='sucursales respuesta fluidez bancaria',  # net_cod = [12,5,7]
+            similar_2='respuesta rapida',  # net_cod = [7]
+            different='menores costos'  # net_cod = [57]
         )

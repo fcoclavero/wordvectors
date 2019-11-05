@@ -1,6 +1,10 @@
-from .vector_factory import VectorFactory
+__author__ = ['Francisco Clavero']
+__email__ = ['fcoclavero32@gmail.com']
+__status__ = 'Prototype'
+
 
 from .settings import ES
+from .vector_factory import VectorFactory
 
 
 class VectorFactorySpanish(VectorFactory):
@@ -22,7 +26,6 @@ class VectorFactorySpanish(VectorFactory):
 
     def __init__(self, vector_path, vector_limit):
         super(VectorFactorySpanish, self).__init__(vector_path, vector_limit)
-
 
 
 vector_factory = VectorFactorySpanish.getInstance(ES['VECTOR_PATH'], ES['VECTOR_LIMIT'])

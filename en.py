@@ -1,6 +1,10 @@
-from .vector_factory import VectorFactory
+__author__ = ['Francisco Clavero']
+__email__ = ['fcoclavero32@gmail.com']
+__status__ = 'Prototype'
+
 
 from .settings import EN
+from .vector_factory import VectorFactory
 
 
 class VectorFactoryEnglish(VectorFactory):
@@ -24,9 +28,7 @@ class VectorFactoryEnglish(VectorFactory):
         super(VectorFactoryEnglish, self).__init__(vector_path, vector_limit)
 
 
-
 vector_factory = VectorFactoryEnglish.getInstance(EN['VECTOR_PATH'], EN['VECTOR_LIMIT'])
-
 
 
 def word_vector(word):
