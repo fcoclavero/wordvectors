@@ -25,7 +25,7 @@ class VectorFactorySpanish(VectorFactory):
         return VectorFactorySpanish.__instance
 
     def __init__(self, vector_path, vector_limit):
-        super(VectorFactorySpanish, self).__init__(vector_path, vector_limit)
+        super().__init__(vector_path, vector_limit)
 
 
 vector_factory = VectorFactorySpanish.getInstance(ES['VECTOR_PATH'], ES['VECTOR_LIMIT'])
