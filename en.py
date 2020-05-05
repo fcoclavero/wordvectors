@@ -34,7 +34,7 @@ vector_factory = VectorFactoryEnglish.getInstance(EN['VECTOR_PATH'], EN['VECTOR_
 def word_vector(word):
     """
     Generates a word embedding vector which should encode semantic meaning.
-    :param document: a single word
+    :param word: a single word
     :type: str
     :return: the sentence's word vector
     :type: np.ndarray

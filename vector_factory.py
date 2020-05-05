@@ -25,7 +25,7 @@ class VectorFactory:
         try:
             # loading a pickle is faster
             self.keyed_vectors = pickle.load(open(vector_path + ".pickle", 'rb'))
-        except Exception as e:
+        except FileNotFoundError:
             # if no pickle exists, load the object from the vec file and pickle it
             self.keyed_vectors = KeyedVectors.load_word2vec_format(vector_path, limit=vector_limit)
             pickle.dump(self.keyed_vectors, open(vector_path + ".pickle", 'wb'))
@@ -81,7 +81,7 @@ class VectorFactory:
         """
         try:
             new_vector = self.word_vector(word)
-        except Exception as e:
+        except FileNotFoundError:
             new_vector = self.zero_vector
 
         return partial_vector + new_vector
@@ -89,7 +89,7 @@ class VectorFactory:
     def word_vector(self, word):
         """
         Generates a word embedding vector which should encode semantic meaning.
-        :param document: a single word
+        :param word: a single word
         :type: str
         :return: the sentence's word vector
         :type: np.ndarray
