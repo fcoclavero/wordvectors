@@ -50,9 +50,9 @@ class VectorFactoryTestCase(TestCase):
         result of the multiplicative combination objective proposed by Omer Levy and
         Yoav Goldberg.
         :param positive: words that contribute positively towards the similarity
-        :type: list<str>
+        :type: List[str]
         :param negative: words that contribute negatively towards the similarity
-        :type: list<str>
+        :type: List[str]
         :param required: word that must be present in the top 10 most similar vectors
         :type: str
         :return: None
@@ -78,7 +78,7 @@ class VectorFactoryTestCase(TestCase):
         Test matching. Check that when all the words in "similar" plus the "different"
         word are matched, "different" is correctly identified as the most dissimilar.
         :param similar: list of similar words
-        :type: list<str>
+        :type: List[str]
         :param different: a word semantically different from the words in "similar"
         :type: str
         :return: None
