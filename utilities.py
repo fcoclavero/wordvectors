@@ -15,7 +15,7 @@ def random_insert(lst, item):
     """
     Inserts an item into a list, at a random position.
     :param lst: the list to be extended
-    :type: list
+    :type: List
     :param item: the item to be inserted
     :type: any
     :return: None
