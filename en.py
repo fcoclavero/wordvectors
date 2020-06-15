@@ -1,6 +1,6 @@
-__author__ = ['Francisco Clavero']
-__email__ = ['fcoclavero32@gmail.com']
-__status__ = 'Prototype'
+__author__ = ["Francisco Clavero"]
+__email__ = ["fcoclavero32@gmail.com"]
+__status__ = "Prototype"
 
 
 from .settings import EN
@@ -11,6 +11,7 @@ class VectorFactoryEnglish(VectorFactory):
     """
     Utility class to manage a single VectorFactory instance for this language, as they are heavy to load.
     """
+
     __instance = None
 
     @staticmethod
@@ -20,15 +21,15 @@ class VectorFactoryEnglish(VectorFactory):
         :return: the single KeyedVectorSingleton instance
         :type: KeyedVectorSingleton
         """
-        if VectorFactoryEnglish.__instance is None: # if not created
-            VectorFactoryEnglish.__instance = VectorFactoryEnglish(vector_path, vector_limit) # set the instance
+        if VectorFactoryEnglish.__instance is None:  # if not created
+            VectorFactoryEnglish.__instance = VectorFactoryEnglish(vector_path, vector_limit)  # set the instance
         return VectorFactoryEnglish.__instance
 
     def __init__(self, vector_path, vector_limit):
         super().__init__(vector_path, vector_limit)
 
 
-vector_factory = VectorFactoryEnglish.getInstance(EN['VECTOR_PATH'], EN['VECTOR_LIMIT'])
+vector_factory = VectorFactoryEnglish.getInstance(EN["VECTOR_PATH"], EN["VECTOR_LIMIT"])
 
 
 def word_vector(word):

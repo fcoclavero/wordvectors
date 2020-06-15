@@ -1,13 +1,14 @@
-__author__ = ['Francisco Clavero']
-__email__ = ['fcoclavero32@gmail.com']
-__status__ = 'Prototype'
+__author__ = ["Francisco Clavero"]
+__email__ = ["fcoclavero32@gmail.com"]
+__status__ = "Prototype"
 
 
 import pickle
 
+from functools import reduce
+
 import numpy as np
 
-from functools import reduce
 from gensim.models.keyedvectors import KeyedVectors
 
 
@@ -24,11 +25,11 @@ class VectorFactory:
         """
         try:
             # loading a pickle is faster
-            self.keyed_vectors = pickle.load(open(vector_path + ".pickle", 'rb'))
+            self.keyed_vectors = pickle.load(open(vector_path + ".pickle", "rb"))
         except FileNotFoundError:
             # if no pickle exists, load the object from the vec file and pickle it
             self.keyed_vectors = KeyedVectors.load_word2vec_format(vector_path, limit=vector_limit)
-            pickle.dump(self.keyed_vectors, open(vector_path + ".pickle", 'wb'))
+            pickle.dump(self.keyed_vectors, open(vector_path + ".pickle", "wb"))
 
     @property
     def vector_dimensions(self):
@@ -36,9 +37,11 @@ class VectorFactory:
         Gensim does not provide a method the get the vector shape, so we must manually get it using a word in the corpus.
         :return: the vector dimensions
         """
-        corpus_word = self.keyed_vectors.index2word[0] # get the first corpus word (any). NOTE: This function used to be index2entity
+        corpus_word = self.keyed_vectors.index2word[
+            0
+        ]  # get the first corpus word (any). NOTE: This function used to be index2entity
         corpus_word_vector = self.keyed_vectors[corpus_word]  # get its wordvector
-        return corpus_word_vector.shape # return its shape
+        return corpus_word_vector.shape  # return its shape
 
     @property
     def zero_vector(self):

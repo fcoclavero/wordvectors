@@ -1,15 +1,16 @@
-__author__ = ['Francisco Clavero']
-__email__ = ['fcoclavero32@gmail.com']
-__status__ = 'Prototype'
+__author__ = ["Francisco Clavero"]
+__email__ = ["fcoclavero32@gmail.com"]
+__status__ = "Prototype"
 
-
-import numpy as np
 
 from unittest import TestCase
 
+import numpy as np
+
 from ..es import VectorFactorySpanish
 from ..settings import ES
-from ..utilities import random_insert, distance_cosine
+from ..utilities import distance_cosine
+from ..utilities import random_insert
 
 
 class VectorFactoryTestCase(TestCase):
@@ -24,8 +25,8 @@ class VectorFactoryTestCase(TestCase):
         Loads word vectors and creates a new vector factory
         :return: None
         """
-        cls.keyed_vectors = VectorFactorySpanish.getInstance(ES['VECTOR_PATH'], ES['VECTOR_LIMIT'])
-        cls.word = 'palabra'
+        cls.keyed_vectors = VectorFactorySpanish.getInstance(ES["VECTOR_PATH"], ES["VECTOR_LIMIT"])
+        cls.word = "palabra"
         cls.word_vector = cls.keyed_vectors.word_vector(cls.word)
         cls.zero_vector = cls.keyed_vectors.zero_vector
 
@@ -34,7 +35,7 @@ class VectorFactoryTestCase(TestCase):
         Test that only one instance is created.
         :return: None
         """
-        new_keyed_vectors = VectorFactorySpanish.getInstance(ES['VECTOR_PATH'], ES['VECTOR_LIMIT'])
+        new_keyed_vectors = VectorFactorySpanish.getInstance(ES["VECTOR_PATH"], ES["VECTOR_LIMIT"])
         self.assertEqual(self.keyed_vectors, new_keyed_vectors)
 
     def test_dimensions(self):
@@ -57,7 +58,7 @@ class VectorFactoryTestCase(TestCase):
         :type: str
         :return: None
         """
-        similar = self.keyed_vectors.most_similar_cosmul(positive=positive, negative=negative) # (str, distance) pairs
+        similar = self.keyed_vectors.most_similar_cosmul(positive=positive, negative=negative)  # (str, distance) pairs
         similar_strings = [s[0] for s in similar]  # get only strings
         self.assertTrue(required in similar_strings)
 
@@ -67,11 +68,10 @@ class VectorFactoryTestCase(TestCase):
         the vector space; one that reflects the semantic meaning of the words.
         :return: None
         """
-        self._word_vectors_similarity(positive=['rey', 'mujer'], negative=['hombre'], required='reina')
-        self._word_vectors_similarity(positive=['jugar', 'canta'], negative=['cantar'], required='juega'
-        )
-        self._word_vectors_similarity(positive=['pinochet', 'argentino'], negative=['chileno'], required='perón')
-        self._word_vectors_similarity(positive=['santiago', 'venezuela'], negative=['chile'], required='caracas')
+        self._word_vectors_similarity(positive=["rey", "mujer"], negative=["hombre"], required="reina")
+        self._word_vectors_similarity(positive=["jugar", "canta"], negative=["cantar"], required="juega")
+        self._word_vectors_similarity(positive=["pinochet", "argentino"], negative=["chileno"], required="perón")
+        self._word_vectors_similarity(positive=["santiago", "venezuela"], negative=["chile"], required="caracas")
 
     def _word_vectors_match(self, similar, different):
         """
@@ -94,8 +94,8 @@ class VectorFactoryTestCase(TestCase):
         the vector space; one that reflects the semantic meaning of the words.
         :return: None
         """
-        self._word_vectors_match(similar=['blanco', 'azul', 'rojo'], different='chile')
-        self._word_vectors_match(similar=['lunes', 'martes', 'miercoles'], different='septiembre')
+        self._word_vectors_match(similar=["blanco", "azul", "rojo"], different="chile")
+        self._word_vectors_match(similar=["lunes", "martes", "miercoles"], different="septiembre")
 
     def test_word_vector_sum(self):
         """
@@ -104,16 +104,18 @@ class VectorFactoryTestCase(TestCase):
         """
         # If the partial vector is zero, the word's vector should be returned
         np.testing.assert_array_equal(
-            self.word_vector, self.keyed_vectors._word_vector_partial_sum(self.zero_vector, self.word))
+            self.word_vector, self.keyed_vectors._word_vector_partial_sum(self.zero_vector, self.word)
+        )
 
         # If a non-existent word is added, the result should be the partial vector
         np.testing.assert_array_equal(
-            self.zero_vector, self.keyed_vectors._word_vector_partial_sum(self.zero_vector, 'plbra'))
+            self.zero_vector, self.keyed_vectors._word_vector_partial_sum(self.zero_vector, "plbra")
+        )
 
         # Simple sum
         np.testing.assert_array_equal(
             self.word_vector + self.word_vector,
-            self.keyed_vectors._word_vector_partial_sum(self.word_vector, self.word)
+            self.keyed_vectors._word_vector_partial_sum(self.word_vector, self.word),
         )
 
     def test_vector_from_word(self):
@@ -168,17 +170,17 @@ class VectorFactoryTestCase(TestCase):
         :return: None
         """
         self._document_vector(
-            similar_1='trayectoria',  # net_cod = [5]
-            similar_2='historial trayectoria',  # net_cod = [5]
-            different='atencion'  # net_cod = [1]
+            similar_1="trayectoria",  # net_cod = [5]
+            similar_2="historial trayectoria",  # net_cod = [5]
+            different="atencion",  # net_cod = [1]
         )
         self._document_vector(
-            similar_1='costo corriente alto costo gasto mensual',  # net_cod = [61]
-            similar_2='costo mantencion costo alto mantencion',  # net_cod = [61]
-            different='precio variedad servicio'  # net_cod = [8,2]
+            similar_1="costo corriente alto costo gasto mensual",  # net_cod = [61]
+            similar_2="costo mantencion costo alto mantencion",  # net_cod = [61]
+            different="precio variedad servicio",  # net_cod = [8,2]
         )
         self._document_vector(
-            similar_1='sucursales respuesta fluidez bancaria',  # net_cod = [12,5,7]
-            similar_2='respuesta rapida',  # net_cod = [7]
-            different='menores costos'  # net_cod = [57]
+            similar_1="sucursales respuesta fluidez bancaria",  # net_cod = [12,5,7]
+            similar_2="respuesta rapida",  # net_cod = [7]
+            different="menores costos",  # net_cod = [57]
         )

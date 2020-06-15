@@ -1,13 +1,14 @@
-__author__ = ['Francisco Clavero']
-__email__ = ['fcoclavero32@gmail.com']
-__status__ = 'Prototype'
+__author__ = ["Francisco Clavero"]
+__email__ = ["fcoclavero32@gmail.com"]
+__status__ = "Prototype"
 
 
 import sys
 
+from random import randrange
+
 import numpy as np
 
-from random import randrange
 from scipy.spatial.distance import cosine
 
 
@@ -33,9 +34,9 @@ def distance_cosine(vector_1, vector_2):
     :return: the cosine distance between the two vectors.
     """
     if np.isnan(vector_1).any():
-        print('vector_1 has nan')
+        print("vector_1 has nan")
     elif np.isnan(vector_1).any():
-        print('vector_2 has nan')
+        print("vector_2 has nan")
     else:
         return cosine(vector_1, vector_2)
     return sys.float_info.max
