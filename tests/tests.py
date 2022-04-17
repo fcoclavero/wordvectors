@@ -16,7 +16,11 @@ from ..utilities import cosine_distance, random_insert
 class VectorFactoryTestCase(TestCase):
     """Tests for creating vectors from strings and vector space properties."""
 
-    VectorFactorySpanish
+    keyed_vectors: VectorFactorySpanish
+    """Keyed vectors instance to be used in the test suite."""
+
+    word: str
+    """A word in `VectorFactorySpanish` to be used for tests."""
 
     @classmethod
     def setUpClass(cls) -> None:
@@ -46,8 +50,8 @@ class VectorFactoryTestCase(TestCase):
     def _word_vectors_similarity(
         self, positive: List[str], negative: List[str], required: str
     ) -> None:
-        """Test similarities. Checks that required is the 10 most similar vectors to the
-        result of the multiplicative combination objective proposed by Omer Levy and
+        """Test similarities. Checks that required is in the 10 most similar vectors to
+        the result of the multiplicative combination objective proposed by Omer Levy and
         Yoav Goldberg.
 
         Arguments:
@@ -179,15 +183,15 @@ class VectorFactoryTestCase(TestCase):
         self._document_vector(
             similar_1="trayectoria",  # net_cod = [5]
             similar_2="historial trayectoria",  # net_cod = [5]
-            different="atencion",  # net_cod = [1]
+            different="atención",  # net_cod = [1]
         )
         self._document_vector(
             similar_1="costo corriente alto costo gasto mensual",  # net_cod = [61]
-            similar_2="costo mantencion costo alto mantencion",  # net_cod = [61]
+            similar_2="costo mantención costo alto mantención",  # net_cod = [61]
             different="precio variedad servicio",  # net_cod = [8,2]
         )
         self._document_vector(
             similar_1="sucursales respuesta fluidez bancaria",  # net_cod = [12,5,7]
-            similar_2="respuesta rapida",  # net_cod = [7]
+            similar_2="respuesta rápida",  # net_cod = [7]
             different="menores costos",  # net_cod = [57]
         )

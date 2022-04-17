@@ -5,7 +5,7 @@ __status__ = "Prototype"
 
 import os
 
-from typing import Dict, Optional
+from typing import Dict, Optional, Union
 
 from dotenv import load_dotenv
 
@@ -16,13 +16,13 @@ load_dotenv()
 EMBEDDINGS_DIR: str = os.environ["EMBEDDINGS_DIR"]
 """Path to the root embedding directory."""
 
-EN: Dict[str, Optional[int]] = {
+EN: Dict[str, Union[str, Optional[int]]] = {
     "VECTOR_PATH": os.path.join(EMBEDDINGS_DIR, "en", "wiki-news-300d-1M-subword.vec"),
     "VECTOR_LIMIT": None,
 }
 """English `VectorFactory` settings."""
 
-ES: Dict[str, Optional[int]] = {
+ES: Dict[str, Union[str, Optional[int]]] = {
     "VECTOR_PATH": os.path.join(EMBEDDINGS_DIR, "es", "FastText_SBWC.vec"),
     "VECTOR_LIMIT": None,
 }

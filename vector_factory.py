@@ -68,7 +68,7 @@ class VectorFactory:
         self,
         positive: Optional[List[str]],
         negative: Optional[List[str]],
-        topn: Optional[int],
+        topn: Optional[int] = 10,
     ):
         """Adapter method to simplify interface.
 
@@ -107,7 +107,7 @@ class VectorFactory:
         """
         try:
             new_vector = self.word_vector(word)
-        except FileNotFoundError:
+        except KeyError:
             new_vector = self.zero_vector
 
         return partial_vector + new_vector
@@ -122,7 +122,7 @@ class VectorFactory:
         Returns:
             The word's vector.
         """
-        return self.keyed_vectors[word]
+        return self.keyed_vectors.get_vector(word)
 
     def document_vector(self, document: str) -> np.ndarray:
         """Generates a document embedding vector which should encode its semantic
